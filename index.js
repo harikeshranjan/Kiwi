@@ -21,4 +21,11 @@ program
     }
   })
 
+program
+  .command("version")
+  .description("Show the current version")
+  .action(() => {
+    console.log("v1.0.0")
+  })
+
 program.parse(process.argv)
