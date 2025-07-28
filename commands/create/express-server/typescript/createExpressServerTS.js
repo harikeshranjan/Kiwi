@@ -4,13 +4,13 @@ import path from "path";
 import chalk from "chalk";
 import { execa } from "execa";
 
-export async function createExpressServerTS(projectName, projectPath, isCurrentDir) {
+export async function createExpressServerTS(projectName, projectPath, isCurrentDir, dbName) {
   fs.mkdirSync(projectPath, { recursive: true });
 
   console.log(chalk.green(`\n📁 Creating TypeScript project in: ${projectPath}\n`));
 
   await execa("npm", ["init", "-y"], { cwd: projectPath, stdio: "inherit" });
-  await execa("npm", ["install", "express", "dotenv", "mongoose", "nodemon", "cors", "rimraf", "pre-commit"], {
+  await execa("npm", ["install", "express", "dotenv", "nodemon", "cors", "rimraf", "pre-commit"], {
     cwd: projectPath,
     stdio: "inherit",
   });
@@ -19,6 +19,10 @@ export async function createExpressServerTS(projectName, projectPath, isCurrentD
     stdio: "inherit",
   });
   await execa("git", ["init"], { cwd: projectPath, stdio: "inherit" });
+
+  if (dbName === "MongoDB") {
+    await execa("npm", ["install", "mongoose"], { cwd: projectPath, stdio: "inherit" })
+  }
 
   fs.writeFileSync(
     path.join(projectPath, "tsconfig.json"),
@@ -40,7 +44,19 @@ export async function createExpressServerTS(projectName, projectPath, isCurrentD
     )
   );
 
-  fs.writeFileSync(path.join(projectPath, ".env"), `PORT=5000\nMONGODB_URI=\n`);
+  let dbEnv = "";
+
+  if (dbName === "MongoDB") {
+    dbEnv = "MONGODB_URI=";
+  } else if (dbName === "PostgreSQL") {
+    dbEnv = "POSTGRES_URI=";
+  }
+
+  fs.writeFileSync(
+    path.join(projectPath, ".env"),
+    `PORT=5000\n${dbEnv}\n`
+  );
+
   fs.writeFileSync(path.join(projectPath, ".gitignore"), `node_modules\n.env\n`);
 
   fs.writeFileSync(

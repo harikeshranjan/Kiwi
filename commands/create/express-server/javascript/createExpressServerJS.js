@@ -3,24 +3,36 @@ import path from "path";
 import chalk from "chalk";
 import { execa } from "execa";
 
-export async function createExpressServerJS(projectName, projectPath, isCurrentDir) {
+export async function createExpressServerJS(projectName, projectPath, isCurrentDir, dbName) {
   fs.mkdirSync(projectPath, { recursive: true });
 
   console.log(chalk.green(`\n📁 Creating JavaScript project in: ${projectPath}\n`));
 
   await execa("npm", ["init", "-y"], { cwd: projectPath, stdio: "inherit" });
-  await execa("npm", ["install", "express", "dotenv", "mongoose", "nodemon", "cors", "rimraf", "pre-commit"], {
+  await execa("npm", ["install", "express", "dotenv", "nodemon", "cors", "rimraf", "pre-commit"], {
     cwd: projectPath,
     stdio: "inherit",
   });
   await execa("git", ["init"], { cwd: projectPath, stdio: "inherit" });
 
+  if (dbName === "MongoDB") {
+    await execa("npm", ["install", "mongoose"], { cwd: projectPath, stdio: "inherit" });
+  }
+
   // Writing .env file
-  const envContent = `
-PORT=5000
-MONGODB_URI=
-`;
-  fs.writeFileSync(path.join(projectPath, '.env'), envContent);
+  let dbEnv = "";
+
+  if (dbName === "MongoDB") {
+    dbEnv = "MONGODB_URI=";
+  } else if (dbName === "PostgreSQL") {
+    dbEnv = "POSTGRES_URI=";
+  }
+
+  fs.writeFileSync(
+    path.join(projectPath, ".env"),
+    `PORT=5000\n${dbEnv}\n`
+  );
+
 
   // Writing .gitignore file
   const gitIgnoreContent = `
