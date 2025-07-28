@@ -49,6 +49,19 @@ node_modules
 }`
   );
 
+  const packageJsonPath = path.join(projectPath, "package.json");
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
+
+  packageJson.scripts = {
+    ...packageJson.scripts,
+    start: "nodemon src/index.js",
+    dev: "nodemon src/index.js",
+
+  };
+
+  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+
+
   const srcDir = path.join(projectPath, "src");
   fs.mkdirSync(srcDir, { recursive: true });
   fs.writeFileSync(
