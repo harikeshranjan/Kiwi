@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import { Command } from "commander";
+import path from "path"
 import { createExpressServer } from "./commands/create/express-server/createExpressServer.js";
+import { createJavaProject } from "./commands/create/java-project/createJavaProject.js";
 
 const program = new Command();
 
@@ -14,8 +16,15 @@ program
   .argument('<template>', 'template type, e.g., express-server')
   .argument('<project_name', 'name of the project (or "." for current directory)')
   .action((template, projectName) => {
+    const isCurrentDir = projectName === ".";
+    const projectPath = isCurrentDir
+      ? process.cwd()
+      : path.join(process.cwd(), projectName);
+
     if (template == 'express-server') {
       createExpressServer(projectName)
+    } else if (template == 'java-project') {
+      createJavaProject(projectPath, projectName, isCurrentDir);
     } else {
       console.log(`❌ Unknown template: ${template}`);
     }
