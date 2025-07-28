@@ -122,5 +122,5 @@ app.listen(PORT, () => {
   console.log(chalk.blue(`\n✅ TypeScript Express server created successfully!`));
   console.log(chalk.gray(`\n👉 To start:`));
   console.log(`   cd ${isCurrentDir ? "." : projectName}`);
-  console.log(`   npx ts-node-dev src/index.ts`);
+  console.log(`   npm run dev`);
 }

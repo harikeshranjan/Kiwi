@@ -98,6 +98,6 @@ app.listen(PORT, () => {
   console.log(chalk.blue(`\n✅ JavaScript Express server created successfully!`));
   console.log(chalk.gray(`\n👉 To start:`));
   console.log(`   cd ${isCurrentDir ? "." : projectName}`);
-  console.log(`   node src/index.js`);
+  console.log(`   npm run dev`);
 }
 
