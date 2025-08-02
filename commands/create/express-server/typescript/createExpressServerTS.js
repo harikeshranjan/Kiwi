@@ -86,11 +86,11 @@ export async function createExpressServerTS(projectName, projectPath, isCurrentD
 
   packageJson.scripts = {
     ...packageJson.scripts,
-    start: "nodemon src/index.js",
+    start: "nodemon src/index.ts",
     build: "rimraf dist && tsc",
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist",
-    dev: "nodemon --exec ts-node src/index.js"
+    dev: "nodemon --exec ts-node src/index.ts"
   };
 
   packageJson["pre-commit"] = ["ts.check", "build", "add-build"];
