@@ -362,4 +362,9 @@ main() ->
 end program hello
 `
   },
+  {
+    id: 47,
+    extension: 'txt',
+    content: "Hello, World!"
+  }
 ]
